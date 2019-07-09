@@ -9,6 +9,7 @@
 <SET REDEFINE T>
 <SETG NEW-VOC? T>
 <FREQUENT-WORDS?>
+<CONSTANT RELEASEID 42>
  
 <PRINC "Renovated ZORK I: The Great Underground Empire
 ">
