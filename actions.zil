@@ -3347,7 +3347,7 @@ teeth ache to touch it." CR>)>>
 		      <SET CNT <+ .CNT 1>>
 		      <COND (<EQUAL? .CNT .LEN>
 			     <SET RES T>
-			     <RETURN T>)>
+			     <RETURN>)>
 		      <SET OO <GET ,VILLAINS .CNT>>
 		      <SET O <GET .OO ,V-VILLAIN>>
 		      <COND (<NOT <FSET? .O ,FIGHTBIT>>)
