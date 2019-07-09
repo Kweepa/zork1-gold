@@ -130,9 +130,9 @@ game position, receive a hint, or end this session of the game?|
 
 <ROUTINE V-VERSION ("AUX" (CNT 17))
 	%<COND (<==? ,ZORK-NUMBER 1>
-		'<TELL "ZORK I: The Great Underground Empire|
-Infocom interactive fiction - a fantasy story|
-Copyright (c) 1981, 1982, 1983, 1984, 1985, 1986">)
+		'<TELL "Dr Grue|
+A grue-vy (sorry!) adventure by Steve 'Kweepa' McCrea.|
+Based on ZORK I by">)
 	       (<==? ,ZORK-NUMBER 2>
 		'<TELL "ZORK II: The Wizard of Frobozz|
 Infocom interactive fiction - a fantasy story|
@@ -1822,6 +1822,11 @@ long description (fdesc or ldesc), otherwise will print short."
 	 <COND (<AND <SEE-INSIDE? .OBJ> <FIRST? .OBJ>>
 		<PRINT-CONT .OBJ .V? .LEVEL>)>>
 
+<ROUTINE TELL-A-D (OBJ)
+	<COND (<FSET? .OBJ ,VOWELBIT> <TELL "an ">)
+		(T <TELL "a ">)>
+	<TELL D .OBJ>>
+
 <ROUTINE PRINT-CONTENTS (OBJ "AUX" F N (1ST? T) (IT? <>) (TWO? <>))
 	 <COND (<SET F <FIRST? .OBJ>>
 		<REPEAT ()
@@ -1830,7 +1835,7 @@ long description (fdesc or ldesc), otherwise will print short."
 			      (ELSE
 			       <TELL ", ">
 			       <COND (<NOT .N> <TELL "and ">)>)>
-			<TELL "a " D .F>
+			<TELL-A-D .F>
 			<COND (<AND <NOT .IT?> <NOT .TWO?>>
 			       <SET IT? .F>)
 			      (ELSE

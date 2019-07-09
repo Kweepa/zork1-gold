@@ -368,6 +368,7 @@ sceptre is ornamented with colored enamel, and tapers to a sharp point.")
 	(LOC SANDWICH-BAG)
 	(SYNONYM GARLIC CLOVE)
 	(DESC "clove of garlic")
+	(TEXT "A pungent fist-sized clove of garlic.")
 	(FLAGS TAKEBIT FOODBIT)
 	(ACTION GARLIC-F)
 	(SIZE 4)>
@@ -2698,7 +2699,7 @@ a small opening.")
 ;"The GO routine must live here."
 
 <ROUTINE GO ()
-        <ENABLE <QUEUE I-FIGHT -1>> ;"ints now as in orig."
+	<ENABLE <QUEUE I-FIGHT -1>> ;"ints now as in orig."
 	<QUEUE I-SWORD -1>
 	;<ENABLE <QUEUE I-SWORD -1>>
 	<ENABLE <QUEUE I-THIEF -1>>
@@ -2706,6 +2707,7 @@ a small opening.")
 	;<ENABLE <QUEUE I-CANDLES 40>>
 	<QUEUE I-LANTERN 200>
 	;<ENABLE <QUEUE I-LANTERN 200>>
+	<ENABLE <QUEUE I-COMPANION -1>>
 	<PUTP ,INFLATED-BOAT ,P?VTYPE ,NONLANDBIT>
 	<PUT ,DEF1-RES 1 <REST ,DEF1 2>>
 	<PUT ,DEF1-RES 2 <REST ,DEF1 4>>
@@ -2718,6 +2720,15 @@ a small opening.")
 	<CLEAR -1>
         <INIT-STATUS-LINE>
 	<CRLF>
+	<COMPANION-INIT>
+	<TELL "HAWRUNK! HAWRUNK!|
+The Tardis performs a barrel roll through the sixteen squidgiest dimensions. \"Whoa, there!\" You attempt to soothe her.||
+HAWRUNK! HAWRUNK!|
+\"Where to now?\" Your companion's head is hidden under a flurry of towel as she enters.||
+HAWRUNK! HAWRUNK!|
+\"You'll see! You'll like it!\" She doesn't look too excited. \"Honest!\" you add, weakly.||
+HAWRUNK! HAWRunk. hawru...|
+The Tardis exits the time vortex, right where and when you planned. For a change.||">
 	<COND (<NOT <FSET? ,HERE ,TOUCHBIT>>
 	       <V-VERSION>
 	       <CRLF>)>

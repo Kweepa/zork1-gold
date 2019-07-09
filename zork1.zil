@@ -64,3 +64,4 @@ OFF!-INITIAL   ;"makes dubugging possible -pld"
 <INSERT-FILE "VERBS" T>
 <INSERT-FILE "ACTIONS" T>
 <INSERT-FILE "HINTS" T>
+<INSERT-FILE "COMPANION" T>
