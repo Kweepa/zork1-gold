@@ -6,7 +6,7 @@
 
 "Verb Functions for Game Commands"
 
-<GLOBAL VERBOSE <>>
+<GLOBAL VERBOSE T>
 <GLOBAL SUPER-BRIEF <>>
 <GDECL (VERBOSE SUPER-BRIEF) <OR ATOM FALSE>>
 
@@ -21,6 +21,7 @@
 	 <TELL "Brief descriptions." CR>>
 
 <ROUTINE V-SUPER-BRIEF ()
+	 <SETG VERBOSE <>>
 	 <SETG SUPER-BRIEF T>
 	 <TELL "Superbrief descriptions." CR>>
 
@@ -130,8 +131,8 @@ game position, receive a hint, or end this session of the game?|
 
 <ROUTINE V-VERSION ("AUX" (CNT 17))
 	%<COND (<==? ,ZORK-NUMBER 1>
-		'<TELL "Dr Grue|
-A grue-vy (sorry!) adventure by Steve 'Kweepa' McCrea.|
+		'<TELL "Grueland|
+A grue-vy adventure by Steve 'Kweepa' McCrea.|
 Based on ZORK I by">)
 	       (<==? ,ZORK-NUMBER 2>
 		'<TELL "ZORK II: The Wizard of Frobozz|
@@ -489,40 +490,6 @@ Release ">
 "You realize that getting out here would be fatal." CR>
 		<RFATAL>)>>
 
-<ROUTINE V-DISENCHANT ()
-	 %<COND (<==? ,ZORK-NUMBER 2>
-		 '<COND (<NOT <IN? ,PRSO ,HERE>>
-		         <RTRUE>)
-	                (<OR <EQUAL? ,SPELL-USED ,W?FEEBLE ,W?FUMBLE ,W?FEAR>
-		          <EQUAL? ,SPELL-USED ,W?FREEZE ,W?FALL ,W?FERMENT>
-		          <EQUAL? ,SPELL-USED ,W?FIERCE ,W?FENCE ,W?FANTASIZE>>
-		          <COND (<FSET? ,PRSO ,ACTORBIT>
-		                 <COND (<EQUAL? ,SPELL-USED ,W?FEEBLE>
-			                <TELL
-"The " D ,PRSO " seems stronger now." CR>)
-			               (<EQUAL? ,SPELL-USED ,W?FUMBLE>
-			                <TELL
-"The " D ,PRSO " no longer appears clumsy." CR>)
-			               (<EQUAL? ,SPELL-USED ,W?FEAR>
-			                <TELL
-"The " D ,PRSO " no longer appears afraid." CR>)
-			               (<EQUAL? ,SPELL-USED ,W?FREEZE>
-			                <TELL
-"The " D ,PRSO " moves again." CR>)
-			               (<EQUAL? ,SPELL-USED ,W?FERMENT>
-			                <TELL
-"The " D ,PRSO " stops swaying." CR>)
-			               (<EQUAL? ,SPELL-USED ,W?FIERCE>
-			                <TELL
-"The " D ,PRSO " appears more peaceful." CR>)>)>)
-	                        (<EQUAL? ,SPELL-USED ,W?FLOAT>
-		                 <TELL
-"The " D ,PRSO " sinks to the ground." CR>)
-	                        (<EQUAL? ,SPELL-USED ,W?FUDGE>
-		                 <TELL "The sweet smell has dispersed." CR>)>)
-		(T
-		 '<TELL "Nothing happens." CR>)>>
-
 <ROUTINE V-DRINK ()
 	 <V-EAT>>
 
@@ -605,66 +572,6 @@ probably)." CR>>
 			(T <TELL "echo echo ..." CR>)>)
 		(T
 		 '<TELL "echo echo ..." CR>)>>
-
-<ROUTINE V-ENCHANT ()
-%<COND (<==? ,ZORK-NUMBER 2>
-	'<COND (,WAND-ON <SETG SPELL-VICTIM ,WAND-ON>)>)
-       (T
-	'<NULL-F>)>
-%<COND (<==? ,ZORK-NUMBER 2>
-	'<COND (,SPELL-VICTIM
-		<COND (<NOT ,SPELL-USED>
-		       <TELL "You must be more specific." CR>
-		       <RTRUE>)>
-		<COND (<OR <EQUAL? ,SPELL-USED ,W?FEEBLE ,W?FUMBLE ,W?FEAR>
-			   <EQUAL? ,SPELL-USED ,W?FREEZE ,W?FALL ,W?FERMENT>
-			   <EQUAL? ,SPELL-USED ,W?FIERCE ,W?FENCE ,W?FANTASIZE>>
-		       <COND (<FSET? ,PRSO ,ACTORBIT>
-			      <TELL
-"The wand stops glowing, but there is no other obvious effect." CR>)
-			     (T
-			      <TELL
-"That might have done something, but it's hard to tell with a " D ,PRSO "." CR>)>)
-		      ;(<EQUAL? ,SPELL-USED ,W?FIREPROOF>
-		       <RTRUE>)
-		      (<EQUAL? ,SPELL-USED ,W?FUDGE>
-		       <TELL
-"A strong odor of chocolate permeates the room." CR>)
-		      (<EQUAL? ,SPELL-USED ,W?FLUORESCE>
-		       <FSET ,PRSO ,LIGHTBIT>
-		       <FSET ,PRSO ,ONBIT>
-		       <SETG LIT T>
-		       <TELL
-"The " D ,PRSO " begins to glow." CR>)
-		      (<EQUAL? ,SPELL-USED ,W?FILCH>
-		       <SETG SPELL-HANDLED? T>
-		       <COND (<FSET? ,PRSO ,TAKEBIT>
-			      <MOVE ,PRSO ,WINNER>
-			      <SCORE-OBJ ,PRSO>
-			      <TELL "Filched!" CR>)
-			     (ELSE
-			      <TELL "You can't filch the " D ,PRSO "!" CR>)>)
-		      (<AND <EQUAL? ,SPELL-USED ,W?FLOAT>
-			    <FSET? ,PRSO ,TAKEBIT>>
-		       <COND (<AND <EQUAL? ,SPELL-VICTIM ,COLLAR>
-				   <IN? ,COLLAR ,CERBERUS>>
-			      <SETG SPELL-VICTIM ,CERBERUS>)>
-		       <TELL
-"The " D ,PRSO " floats serenely in midair." CR>)
-		      (<AND <EQUAL? ,SPELL-USED ,W?FRY>
-			    <FSET? ,PRSO ,TAKEBIT>>
-		       <SETG SPELL-HANDLED? T>
-		       <REMOVE-CAREFULLY ,PRSO>
-		       <TELL "The " D ,PRSO " goes up in a puff of smoke." CR>)
-		      (ELSE
-		       <SETG SPELL-VICTIM <>>
-		       <TELL
-"The wand stops glowing, but there is no other apparent effect." CR>)>)
-	       (ELSE
-		<SETG SPELL-VICTIM <>>
-		<TELL "Nothing happens." CR>)>)
-       (T
-	'<V-DISENCHANT>)>>
 
 <ROUTINE REMOVE-CAREFULLY (OBJ "AUX" OLIT)
 	 <COND (<EQUAL? .OBJ ,P-IT-OBJECT>
@@ -834,17 +741,6 @@ D ,PRSO "." CR>)>)
 
 <ROUTINE V-INFLATE ()
 	 <TELL "How can you inflate that?" CR>>
-
-;<ROUTINE V-IS-IN ()
-	 <COND (<IN? ,PRSO ,PRSI>
-		<TELL "Yes, it is ">
-		<COND (<FSET? ,PRSI ,SURFACEBIT>
-		       <TELL "on">)
-		      (T
-		       <TELL "in">)>
-		<TELL " the " D ,PRSI "." CR>)
-	       (T
-		<TELL "No, it isn't." CR>)>>
 
 <ROUTINE V-KICK () <HACK-HACK "Kicking the ">>
 
@@ -1082,20 +978,22 @@ by knocking down the wall on the east of the room." CR>
 		<TELL
 "You must tell me how to do that to a " D ,PRSO "." CR>)>>
 
+<OBJECT OVERBOARD
+	(LOC GLOBAL-OBJECTS)
+	(SYNONYM OVERBOARD)
+	(FLAGS NDESCBIT)
+	(ACTION OVERBOARD-F)>
+
+<ROUTINE OVERBOARD-F ()
+	<COND (<AND <VERB? OVERBOARD> <EQUAL? ,PRSI ,OVERBOARD>> <RFALSE>)
+		(T <TELL "Try using a preposition next time." CR>)>>
+
 <ROUTINE V-OVERBOARD ("AUX" LOCN)
-	 <COND %<COND (<==? ,ZORK-NUMBER 1>
-		       '(<EQUAL? ,PRSI ,TEETH>
-			 <COND (<FSET? <SET LOCN <LOC ,WINNER>> ,VEHBIT>
+	 <COND (<FSET? <SET LOCN <LOC ,WINNER>> ,VEHBIT>
 				<MOVE ,PRSO <LOC .LOCN>>
 				<TELL "Ahoy -- " D ,PRSO " overboard!" CR>)
-			       (T
-				<TELL "You're not in anything!" CR>)>))
-		      (T '(<NULL-F> T))>
-	       (<FSET? <LOC ,WINNER> ,VEHBIT>
-		<PERFORM ,V?THROW ,PRSO>
-		<RTRUE>)
-	       (T
-		<TELL "Huh?" CR>)>>
+			(T
+				<TELL "You're not in anything!" CR>)>>
 
 <ROUTINE V-NO ()
 	 <V-YES>>
@@ -1222,9 +1120,6 @@ you kill yourself, just as he might have done!" CR>
 
 <ROUTINE V-RAISE ()
 	 <V-LOWER>>
-
-<ROUTINE V-RAPE ()
-	 <TELL "What a (ahem!) strange idea." CR>>
 
 <ROUTINE PRE-READ ()
 	 <COND (<NOT ,LIT>

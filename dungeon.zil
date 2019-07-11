@@ -18,7 +18,7 @@
 
 <OBJECT TEETH
 	(LOC GLOBAL-OBJECTS)
-	(SYNONYM OVERBOARD TEETH)
+	(SYNONYM CHOPPERS TEETH)
 	(DESC "set of teeth")
 	(FLAGS NDESCBIT)
 	(ACTION TEETH-F)>
@@ -247,6 +247,9 @@ Surely thou shalt repent of thy cunning." )>
 	(FDESC
 "A sceptre, possibly that of ancient Egypt itself, is in the coffin. The
 sceptre is ornamented with colored enamel, and tapers to a sharp point.")
+	(TEXT
+"The sceptre tapers to a sharp point. As you turn it over slowly in
+your hands, a faint rainbow of light emanates from the enameled ornamentation.") ; "SM: added hint"
 	(SIZE 3)
 	(VALUE 4)
 	(TVALUE 6)>
@@ -594,7 +597,7 @@ No computer should be without one!\"")
 
 <OBJECT INFLATED-BOAT
 	(SYNONYM BOAT RAFT)
-	(ADJECTIVE INFLAT MAGIC PLASTIC SEAWORTHY)
+	(ADJECTIVE INFLATED MAGIC PLASTIC SEAWORTHY)
 	(DESC "magic boat")
 	(FLAGS TAKEBIT BURNBIT VEHBIT OPENBIT SEARCHBIT)
 	(ACTION RBOAT-FUNCTION)
@@ -914,13 +917,13 @@ Zorkers were obscure." )>
 
 <OBJECT SWORD
 	(LOC LIVING-ROOM)
-	(SYNONYM SWORD ORCRIST GLAMDRING BLADE)
-	(ADJECTIVE ELVISH OLD ANTIQUE)
+	(SYNONYM SWORD BLADE)
+	(ADJECTIVE OLD ANTIQUE)
 	(DESC "sword")
 	(FLAGS TAKEBIT WEAPONBIT TRYTAKEBIT)
 	(ACTION SWORD-FCN)
 	(FDESC
-"Above the trophy case hangs an elvish sword of great antiquity.")
+"Above the trophy case hangs a sword of great antiquity.")
 	(SIZE 30)
 	(TVALUE 0)>
 
@@ -1686,16 +1689,6 @@ A skeleton, probably the remains of a luckless adventurer, lies here.")
       (NW TO MAZE-13)
       (SW TO MAZE-12)
       (FLAGS MAZEBIT RLANDBIT )>
-
-;<ROUTINE IN-MAZE? (PLACE)
-	 <COND (<EQUAL? .PLACE ,MAZE-1 ,MAZE-2 ,MAZE-3 ,MAZE-4 ,MAZE-5
-			      ,MAZE-6 ,MAZE-7 ,MAZE-8 ,MAZE-9 ,MAZE-10
-			      ,MAZE-11 ,MAZE-12 ,MAZE-13 ,MAZE-14
-			      ,MAZE-15 ,DEAD-END-1
-			      ,DEAD-END-2 ,DEAD-END-3 ,DEAD-END-4>
-		<RTRUE>)
-	       (T
-		<RFALSE>)>>
 
 <ROOM GRATING-ROOM
       (LOC ROOMS)
@@ -2721,14 +2714,7 @@ a small opening.")
         <INIT-STATUS-LINE>
 	<CRLF>
 	<COMPANION-INIT>
-	<TELL "HAWRUNK! HAWRUNK!|
-The Tardis performs a barrel roll through the sixteen squidgiest dimensions. \"Whoa, there!\" You attempt to soothe her.||
-HAWRUNK! HAWRUNK!|
-\"Where to now?\" Your companion's head is hidden under a flurry of towel as she enters.||
-HAWRUNK! HAWRUNK!|
-\"You'll see! You'll like it!\" She doesn't look too excited. \"Honest!\" you add, weakly.||
-HAWRUNK! HAWRunk. hawru...|
-The Tardis exits the time vortex, right where and when you planned. For a change.||">
+	<INTRODUCTION>
 	<COND (<NOT <FSET? ,HERE ,TOUCHBIT>>
 	       <V-VERSION>
 	       <CRLF>)>
@@ -2739,3 +2725,17 @@ The Tardis exits the time vortex, right where and when you planned. For a change
 	<V-LOOK>
 	<MAIN-LOOP>
 	<AGAIN>>
+
+<ROUTINE INTRODUCTION ()
+	<TELL "||
+The ship performs a barrel roll through the sixteen squidgiest dimensions.|
+\"Ah, we're nearly there.\" Your companion's head is hidden under a flurry of towel as she enters.
+She punches a few buttons on the control console, and an unassuming planet fills the view screen.|
+\"You'll see! You'll like it!\" she says.|
+\"Remind me. When was the last time you were here? Forty years ago?\"|
+\"Come on, let's get down to the scout bay.\"||
+The atmosphere tosses the scout around a little, but no more than on a hundred other worlds you've visited
+since hooking up with ">
+	<TELL D ,COMPANION>
+	<TELL ". Before long it's resting on its landing gear.||">
+>
