@@ -2737,5 +2737,5 @@ She punches a few buttons on the control console, and an unassuming planet fills
 The atmosphere tosses the scout around a little, but no more than on a hundred other worlds you've visited
 since hooking up with ">
 	<TELL D ,COMPANION>
-	<TELL ". Before long it's resting on its landing gear.||">
+	<TELL ". Before long it's resting on its landing cushion.||">
 >
