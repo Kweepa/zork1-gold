@@ -715,42 +715,57 @@ OOPS-INBUF, leaving the appropriate pointers in AGAIN-LEXV"
 
 <GLOBAL P-SLOCBITS 0>
 
-<CONSTANT P-SYNLEN 8>
+<CONSTANT P-SYNLEN 8> ; "length of each syntax definition"
 
-<CONSTANT P-SBITS 0>
-<CONSTANT P-SPREP1 1>
-<CONSTANT P-SPREP2 2>
-<CONSTANT P-SFWIM1 3>
-<CONSTANT P-SFWIM2 4>
-<CONSTANT P-SLOC1 5>
-<CONSTANT P-SLOC2 6>
-<CONSTANT P-SACTION 7>
-<CONSTANT P-SONUMS 3>
+; "entry order in a syntax definition"
+<CONSTANT P-SBITS 0> ; "bitflags"
+<CONSTANT P-SPREP1 1>  ; "preposition #1 (generally a modifier for the verb)"
+<CONSTANT P-SPREP2 2> ; "preposition #2"
+<CONSTANT P-SFWIM1 3> ; "'find what I mean' for object #1"
+<CONSTANT P-SFWIM2 4> ; "'find what I mean' for object #2"
+<CONSTANT P-SLOC1 5> ; "classification for object #1"
+<CONSTANT P-SLOC2 6> ; "classification for object #2"
+<CONSTANT P-SACTION 7> ; "action to run when a match is found. note: the pre-action is in a separate table"
+<CONSTANT P-SONUMS 3> ; "object num mask to apply to bitflags"
 
 <ROUTINE SYNTAX-CHECK ("AUX" SYN LEN NUM OBJ
-		       	    (DRIVE1 <>) (DRIVE2 <>) PREP VERB TMP)
+		       	    (DRIVE1 <>) (DRIVE2 <>) PREP VERB TMP IPREP1 IPREP2 SPREP1 SPREP2)
 	<COND (<ZERO? <SET VERB <GET ,P-ITBL ,P-VERB>>>
 	       <TELL "There was no verb in that sentence!" CR>
 	       <RFALSE>)>
-	<SET SYN <GET ,VERBS <- 255 .VERB>>>
-	<SET LEN <GETB .SYN 0>>
-	<SET SYN <REST .SYN>>
+	<SET SYN <GET ,VERBS <- 255 .VERB>>> ; "look up syntax in verb table (like a stack, hence the 255-x)"
+	<SET LEN <GETB .SYN 0>> ; "get number of syntax definitions that match the verb"
+	<SET SYN <REST .SYN>> ; "skip the first element in the list (the len)"
 	<REPEAT ()
-		<SET NUM <BAND <GETB .SYN ,P-SBITS> ,P-SONUMS>>
-		<COND (<G? ,P-NCN .NUM> T)
-		      (<AND <NOT <L? .NUM 1>>
+		<SET NUM <BAND <GETB .SYN ,P-SBITS> ,P-SONUMS>> ; "get the number of objects in the definition"
+		<SET SPREP1 <GETB .SYN ,P-SPREP1>>
+		<SET SPREP2 <GETB .SYN ,P-SPREP2>>
+		<SET IPREP1 <GET ,P-ITBL ,P-PREP1>>
+		<SET IPREP2 <GET ,P-ITBL ,P-PREP2>>
+		; "SM - fix for command like THROW X OVERBOARD. in this case the parser ends up
+			with IPREP1=OVERBOARD and IPREP2=0 (rather than the reverse), but also P-ENDS-ON-PREP=1.
+			so we check the syntax num objects=2, flag on second object is KLUDGEBIT
+			and the input P-NCN=1, P-END-ON-PREP=1, IPREP1>0 and IPREP2=0.
+			If so, swap."
+		<COND (<AND <EQUAL? .NUM 2> <EQUAL? <GETB .SYN ,P-SFWIM2> ,KLUDGEBIT>>
+				<COND 	(<EQUAL? ,P-END-ON-PREP 1>
+							<COND (<AND <EQUAL? ,P-NCN 1>  <GRTR? .IPREP1 0> <ZERO? .IPREP2>>
+								<SET IPREP2 .IPREP1>
+								<SET IPREP1 0>)>)
+						(T <TELL "That sentence isn't one I recognize." CR> <RFALSE>)>)>
+		<COND (<G? ,P-NCN .NUM> T) ; "if input nouns > definition nouns, do nothing"
+		      (<AND <NOT <L? .NUM 1>> ; "at least one object && prep1 matches"
 			    <ZERO? ,P-NCN>
-			    <OR <ZERO? <SET PREP <GET ,P-ITBL ,P-PREP1>>>
-				<EQUAL? .PREP <GETB .SYN ,P-SPREP1>>>>
+			    <OR <ZERO? <SET PREP .IPREP1>>
+				<EQUAL? .PREP .SPREP1>>>
 		       <SET DRIVE1 .SYN>)
-		      (<EQUAL? <GETB .SYN ,P-SPREP1> <GET ,P-ITBL ,P-PREP1>>
-		       <COND (<AND <EQUAL? .NUM 2> <EQUAL? ,P-NCN 1>>
+		      (<EQUAL? .SPREP1 .IPREP1> ; "passed prep 1 match (or no prep 1)"
+		       <COND (<AND <EQUAL? .NUM 2> <EQUAL? ,P-NCN 1>> ; "found a second noun"
 			      <SET DRIVE2 .SYN>)
-			     (<EQUAL? <GETB .SYN ,P-SPREP2>
-				   <GET ,P-ITBL ,P-PREP2>>
+			     (<EQUAL? .SPREP2 .IPREP2>
 			      <SYNTAX-FOUND .SYN>
 			      <RTRUE>)>)>
-		<COND (<DLESS? LEN 1>
+		<COND (<DLESS? LEN 1> ; "skip to next syntax definition (dless = decrement and check less)"
 		       <COND (<OR .DRIVE1 .DRIVE2> <RETURN>)
 			     (T
 			      <TELL

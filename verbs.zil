@@ -978,16 +978,6 @@ by knocking down the wall on the east of the room." CR>
 		<TELL
 "You must tell me how to do that to a " D ,PRSO "." CR>)>>
 
-<OBJECT OVERBOARD
-	(LOC GLOBAL-OBJECTS)
-	(SYNONYM OVERBOARD)
-	(FLAGS NDESCBIT)
-	(ACTION OVERBOARD-F)>
-
-<ROUTINE OVERBOARD-F ()
-	<COND (<AND <VERB? OVERBOARD> <EQUAL? ,PRSI ,OVERBOARD>> <RFALSE>)
-		(T <TELL "Try using a preposition next time." CR>)>>
-
 <ROUTINE V-OVERBOARD ("AUX" LOCN)
 	 <COND (<FSET? <SET LOCN <LOC ,WINNER>> ,VEHBIT>
 				<MOVE ,PRSO <LOC .LOCN>>
